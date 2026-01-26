@@ -7,7 +7,7 @@
 本アプリは **Microsoft Copilot によって作成された Copilot 製アプリ**です。  
 Windows 11 + PowerShell 7.5.4 で動作確認済みですで、5.1でも動作します。
 
-![MagickSplit]( "アプリウィンドウ")
+![MagickSplit](https://github.com/user-attachments/assets/10258794-00bf-4337-952b-26ff77151d7c "アプリウィンドウ")
 ---
 ## 本アプリはPowerShell と WPFで動作します、.NET Frameworkが動作する環境であれば別途ランタイム等のインストールは必要ありません。
 ImageMagickをインストールし、コマンドから使用できるようにしてください。
@@ -65,3 +65,4 @@ pwsh -WindowStyle Hidden -ExecutionPolicy Bypass -File .\画像分割.ps1
 ## 注意事項
 - ImageMagick のインストールが必須です
 - 分割処理は magick -crop を使用しています
+
