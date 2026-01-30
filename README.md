@@ -1,6 +1,7 @@
 # MagickSplit
 
 当アプリは、ImageMagickのフロントエンドです。
+１枚の画像を上下左右に分割する為だけのあぷりです。
 
 ---
 ## このアプリについて
@@ -65,4 +66,5 @@ pwsh -WindowStyle Hidden -ExecutionPolicy Bypass -File .\画像分割.ps1
 ## 注意事項
 - ImageMagick のインストールが必須です
 - 分割処理は magick -crop を使用しています
+
 
