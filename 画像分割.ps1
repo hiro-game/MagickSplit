@@ -1,4 +1,4 @@
-﻿Add-Type -AssemblyName PresentationFramework
+﻿﻿Add-Type -AssemblyName PresentationFramework
 
 #---------------- XAML ----------------
 $xaml = @"
@@ -139,17 +139,19 @@ function Get-ImageFilesFromDrop {
     return $result | Sort-Object -Unique
 }
 
-#------------- 画像分割 -------------
+#------------- 画像分割（完全版）-------------
 function Split-Image {
     param([string]$File)
 
-    if (-not (Test-Path $File)) {
+    if (-not (Test-Path -LiteralPath $File)) {
         Write-Log "ファイルが存在しません: $File"
         return
     }
 
-    # identify でサイズ取得
-    $identify = & magick identify -format "%w %h" -- "$File" 2>$null
+    # identify（配列引数で安全に渡す）
+    $identifyArgs = @("identify", "-format", "%w %h", "--", $File)
+    $identify = & magick @identifyArgs 2>$null
+
     if ($LASTEXITCODE -ne 0 -or -not $identify) {
         Write-Log "identify 失敗のためスキップ: $File"
         return
@@ -178,8 +180,8 @@ function Split-Image {
         $topOut    = Join-Path $dir "${base}_top${ext}"
         $bottomOut = Join-Path $dir "${base}_bottom${ext}"
 
-        & magick "$File" -crop "100%x50%+0+0"          "$topOut"    2>$null
-        & magick "$File" -crop "100%x50%+0+${half}"   "$bottomOut" 2>$null
+        & magick @($File, "-crop", "100%x50%+0+0",        $topOut)    2>$null
+        & magick @($File, "-crop", "100%x50%+0+${half}", $bottomOut) 2>$null
     }
     else {
         Write-Log "  横長 → 左右に分割"
@@ -188,17 +190,17 @@ function Split-Image {
         $leftOut  = Join-Path $dir "${base}_left${ext}"
         $rightOut = Join-Path $dir "${base}_right${ext}"
 
-        & magick "$File" -crop "50%x100%+0+0"          "$leftOut"   2>$null
-        & magick "$File" -crop "50%x100%+${half}+0"    "$rightOut"  2>$null
+        & magick @($File, "-crop", "50%x100%+0+0",        $leftOut)   2>$null
+        & magick @($File, "-crop", "50%x100%+${half}+0", $rightOut)  2>$null
     }
 
     # Processed フォルダへ元画像を移動
     $processedDir = Join-Path $dir "Processed"
-    if (-not (Test-Path $processedDir)) {
+    if (-not (Test-Path -LiteralPath $processedDir)) {
         New-Item -ItemType Directory -Path $processedDir | Out-Null
     }
 
-    Move-Item -Path $File -Destination $processedDir -Force
+    Move-Item -LiteralPath $File -Destination $processedDir -Force
     Write-Log "  → 元画像を Processed に移動"
 }
 
