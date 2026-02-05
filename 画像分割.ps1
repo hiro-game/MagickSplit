@@ -105,24 +105,30 @@ function Get-ImageFilesFromDrop {
     $result = @()
 
     foreach ($p in $Paths) {
-        if (-not (Test-Path $p)) {
+
+        # 存在チェック（LiteralPath）
+        if (-not (Test-Path -LiteralPath $p)) {
             Write-Log "存在しないパスをスキップ: $p"
             continue
         }
 
-        if (Test-Path $p -PathType Container) {
-            # フォルダ → 中の画像（再帰）
+        # フォルダ
+        if (Test-Path -LiteralPath $p -PathType Container) {
             Write-Log "フォルダ内を検索: $p"
-            $files = Get-ChildItem -Path $p -Recurse -File -ErrorAction SilentlyContinue |
+
+            $files = Get-ChildItem -LiteralPath $p -Recurse -File -ErrorAction SilentlyContinue |
                      Where-Object { $script:ImageExtensions -contains $_.Extension.ToLower() } |
                      Select-Object -ExpandProperty FullName
+
             $result += $files
         }
-        else {
-            # 単一ファイル
+
+        # ファイル
+        elseif (Test-Path -LiteralPath $p -PathType Leaf) {
             $ext = [System.IO.Path]::GetExtension($p).ToLower()
+
             if ($script:ImageExtensions -contains $ext) {
-                $result += (Resolve-Path $p).Path
+                $result += (Get-Item -LiteralPath $p).FullName
             }
             else {
                 Write-Log "画像拡張子ではないためスキップ: $p"
@@ -130,7 +136,7 @@ function Get-ImageFilesFromDrop {
         }
     }
 
-    $result | Sort-Object -Unique
+    return $result | Sort-Object -Unique
 }
 
 #------------- 画像分割 -------------
