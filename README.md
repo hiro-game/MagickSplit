@@ -51,13 +51,15 @@ ImageMagickをインストールし、コマンドから使用できるように
 4. PowerShell 7 で起動
 
 ```powershell
-pwsh ./画像分割.ps1
-# PowerShell 5.1 の場合
-powershell ./画像分割.ps1
+pwsh ./MagickSplit.ps1
 ```
+# PowerShell 5.1 の場合
+```
+powershell ./MagickSplit.ps1
 ```
 #ショートカットで使用する場合
-pwsh -WindowStyle Hidden -ExecutionPolicy Bypass -File .\画像分割.ps1
+```
+pwsh "C:\Program Files\PowerShell\7\pwsh.exe" -NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File .\MagickSplit.ps1
 ```
 
 ## ライセンス
