@@ -59,7 +59,7 @@ powershell ./MagickSplit.ps1
 ```
 #ショートカットで使用する場合
 ```
-pwsh "C:\Program Files\PowerShell\7\pwsh.exe" -NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File .\MagickSplit.ps1
+pwsh -NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File .\MagickSplit.ps1
 ```
 
 ## ライセンス
